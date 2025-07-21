@@ -1,4 +1,4 @@
-# Ethical-Hacking 
+# Ethical-Hacking Lab Assignment 
 
 This repository contains the work submitted as  Ethical Hacking Lab assignment . 
 
