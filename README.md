@@ -1,53 +1,98 @@
-# Ethical Hacking Lab: Vulnerable Machine Design & Penetration Testing
+# 🛠️ Vulnerable Machine Design & Penetration Testing
 
-**Disclaimer:** This repository and its contents are strictly for educational purposes and authorized academic testing as part of a university lab assignment. Do not use these methodologies, tools, or techniques on systems you do not own or do not have explicit, documented permission to test.
+A Linux security project covering two perspectives: building a deliberately vulnerable machine and investigating an unfamiliar one.
 
-## 📌 Project Overview
-This repository contains the work submitted for the Ethical Hacking Lab assignment. The project was structured to provide hands-on experience from both sides of the cybersecurity spectrum: offensive (Red Team) and defensive/design (Blue/Builder Team).
+Working in a three-person team, we designed a chain of misconfigurations for a controlled lab, then assessed a separate peer-built machine. The assessment followed an attack path from a vulnerable web application to root access.
 
-The assignment was divided into two core phases:
-1. **Phase 1: Designing a Vulnerable Machine (Group 17)** - Architecting a custom Capture The Flag (CTF) style virtual machine with intentional, realistic vulnerabilities.
-2. **Phase 2: Peer Penetration Testing** - Conducting a full black-box penetration test against a machine developed by another student group, documenting the attack path from initial enumeration to root compromise.
+[🏗️ Machine development report](Development%20of%20a%20Vulnerable%20Machine.pdf) · [🔎 Penetration-testing report](Penetration%20Testing%20on%20a%20Peer%20Machine.pdf)
 
-## 🏗️ Phase 1: Vulnerable Machine Development
-As Group 17, we designed, configured, and deployed a custom virtual environment to challenge our peers. Our goal was to simulate real-world misconfigurations and vulnerabilities without relying on heavily automated exploits.
+## 📌 Project at a glance
 
-**Intentional Vulnerabilities Implemented:**
-* **Initial Access:** SSH brute-force avenues.
-* **Privilege Escalation Vectors:**
-  * SUID misconfigurations
-  * Redis exploitation
-  * PATH variable hijacking
-  * SUID-root binary abuse
-  * Docker escape techniques
+| Part | Work completed |
+|---|---|
+| Machine development | Designed a Linux environment with six intentional weaknesses |
+| Security assessment | Enumerated and tested a separate peer-built machine |
+| Documented outcome | Reached root access on the assessment target |
+| Deliverables | Machine-development report and penetration-testing report |
 
-## ⚔️ Phase 2: Penetration Testing Methodology
-We were assigned a target machine developed by a peer group. Our methodology followed standard penetration testing frameworks (e.g., PTES), covering the following phases:
+Testing took place within an authorised academic lab. The reports describe deliberately vulnerable environments.
 
-1. **Reconnaissance & Enumeration:** Extensive scanning to identify active services, open ports, and hidden directories.
-2. **Exploitation:** Gaining initial footholds via web vulnerabilities and misconfigured services, followed by reverse shell stabilization.
-3. **Privilege Escalation:** Enumerating the local environment to identify weak permissions, leading to full `root` system compromise.
+## 🏗️ Building the vulnerable machine
 
-*(Note: Specific exploit scripts, passwords, and target IP addresses have been sanitized from this public repository.)*
+We designed a sequence of weaknesses that allowed progression between Linux accounts and eventually to root. The development report explains the setup, exploitation steps, and security implications.
 
-## 🛠️ Tools & Technologies Used
-* **Reconnaissance:** `nmap`, `dirb`
-* **Web Exploitation:** `sqlmap`
-* **Brute-Forcing & Cracking:** `Hydra`, `John the Ripper`
-* **Environment:** Custom Linux Virtual Machines, Docker
+| Weakness | What the lab demonstrated |
+|---|---|
+| Weak SSH credentials | Password guessing could provide an initial foothold |
+| SUID misconfiguration | An executable could cross an intended user boundary |
+| Redis misconfiguration | Unrestricted file-writing operations could modify SSH authorisation |
+| PATH hijacking | A privileged script could execute an attacker-controlled command |
+| Unsafe Docker configuration | Privileged execution and writable host mounts could expose host accounts |
+| SUID-root binary calling a writable script | Modifying a trusted script could lead to root execution |
 
-## 🎓 Skills & Competencies Gained
-This project reinforced both offensive techniques and system hardening principles:
-* **Network & Service Enumeration:** Identifying attack surfaces across varying network protocols.
-* **Web Exploitation:** Practical application of SQL Injection and file upload vulnerabilities.
-* **Post-Exploitation:** Reverse shell creation, TTY stabilization, and lateral movement.
-* **Advanced Privilege Escalation:** Chaining exploits including SUID/sudo abuse, PATH hijacking, Redis misconfigurations, and container escapes.
-* **System Hardening:** Understanding how to secure sudoers files, Docker daemon permissions, and file access controls by exploiting them.
-* **Professional Reporting:** Documenting complex attack chains clearly and collaboratively as a technical team.
+The Docker scenario relied on unsafe configuration and host-directory access. It was not an investigation of a container-runtime zero-day.
 
-## 👥 Authors
-* **Group 17**
-* Abhishek Reddy Gade
+[Read the machine development report →](Development%20of%20a%20Vulnerable%20Machine.pdf)
+
+## 🔎 Assessing the peer machine
+
+Our assessment began with network and service discovery, followed by investigation of a forum-style web application.
+
+The documented attack path was:
+
+1. **Discover the application:** Identify exposed services and enumerate web endpoints.
+2. **Bypass authentication:** Confirm SQL injection in the login form.
+3. **Gain code execution:** Exploit an unrestricted avatar upload to obtain a shell.
+4. **Investigate local files:** Find database credentials in application source code.
+5. **Recover account access:** Extract and crack a weak password hash.
+6. **Reach root:** Discover additional credential material and use the recovered password.
+
+The report includes commands, screenshots, troubleshooting steps, and an unsuccessful investigation route.
+
+[Read the penetration-testing report →](Penetration%20Testing%20on%20a%20Peer%20Machine.pdf)
+
+## 🛡️ Defensive lessons
+
+The assessment showed how weaknesses across an application and its host could combine into a complete compromise.
+
+The report discusses remediation for three key findings:
+
+| Finding | Remediation focus |
+|---|---|
+| SQL injection | Parameterised database queries and safer handling of application input |
+| Unrestricted file upload | Server-side validation and storage that prevents uploaded content from executing |
+| Hardcoded database credentials | Secure secret storage, restricted access, and least-privilege database accounts |
+
+These are recommendations from the assessment. The repository does not document a remediation implementation or retest.
+
+## 🔧 Tools used
+
+| Purpose | Tools |
+|---|---|
+| Network and service discovery | Nmap |
+| Web resource enumeration | dirb |
+| SQL injection testing | sqlmap |
+| Shell access and troubleshooting | netcat, Linux utilities |
+| Password testing and recovery | Hydra, John the Ripper |
+| Lab development | Linux virtual machines, Redis, Docker |
+
+## 📂 What is included
+
+- **Development of a Vulnerable Machine.pdf** — configuration choices, intentional weaknesses, and exploitation walkthroughs.
+- **Penetration Testing on a Peer Machine.pdf** — assessment methodology, findings, evidence, and remediation recommendations.
+
+This repository contains the reports. VM images and automated environment provisioning are not included.
+
+## 👥 Team and background
+
+Completed by **Group 17**:
+
+- Abhishek Reddy Gade
+- Riccardo Giacinti
+- Gandikota Venkata Sai Hemanth
+
+The reports document our collective work. This project was completed for the Ethical Hacking Lab at Sapienza University of Rome.
 
 ---
-*Developed as part of the Ethical Hacking Lab Assignment.*
+
+[Back to my profile](https://github.com/AbhishekReddy23) · [Connect on LinkedIn](https://www.linkedin.com/in/abhishek-reddy-gade/)
